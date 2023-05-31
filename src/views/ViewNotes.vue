@@ -15,21 +15,10 @@
       </div>
     </div>
 
-    <div v-for="i in 3" class="card mb-4">
-      <header class="card-header">
-        <p class="card-header-title">Component</p>
-        <button class="card-header-icon" aria-label="more options">
-          <span class="icon">
-            <i class="fas fa-angle-down" aria-hidden="true"></i>
-          </span>
-        </button>
-      </header>
+    <div v-for="note in notes" key="note.id" class="card mb-4">
       <div class="card-content">
         <div class="content">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores sed
-          expedita voluptatibus assumenda facilis corrupti sint dolorum quam
-          autem. Ad at beatae, non dolor illum unde quae pariatur debitis
-          explicabo.
+          {{ note.content }}
         </div>
       </div>
       <footer class="card-footer">
@@ -39,3 +28,20 @@
     </div>
   </div>
 </template>
+
+<script setup>
+
+import { ref } from 'vue'
+
+const notes = ref([
+  {
+    id: "id1",
+    content:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores sed expedita voluptatibus assumenda facilis corrupti sint dolorum quam autem. Ad at beatae, non dolor illum unde quae pariatur debitis explicabo."
+  },
+  {
+    id: "id2",
+    content: "This is a shorter note"
+  }
+])
+
+</script>
