@@ -4,13 +4,13 @@
       <div class="field">
         <label class="label">Message</label>
         <div class="control">
-          <textarea class="textarea" placeholder="Add a new Note" />
+          <textarea v-model="newNote" class="textarea" placeholder="Add a new Note" ref="newNoteRef" />
         </div>
       </div>
 
       <div class="field is-grouped is-grouped-right">
         <div class="control">
-          <button class="button is-link has-background-success">Add New Note</button>
+          <button :disabled="!newNote" @click="addNote" class="button is-link has-background-success">Add New Note</button>
         </div>
       </div>
     </div>
@@ -33,6 +33,10 @@
 
 import { ref } from 'vue'
 
+const newNote = ref('')
+const newNoteRef = ref(null)
+
+
 const notes = ref([
   {
     id: "id1",
@@ -44,4 +48,19 @@ const notes = ref([
   }
 ])
 
+
+const addNote = () => {
+
+  let currentDate = new Date().getTime(),
+    id = currentDate.toString()
+  
+  let note = {
+    id,
+    content: newNote.value
+  }
+
+  notes.value.unshift(note)
+  newNote.value = ''
+  newNoteRef.value.focus()
+}
 </script>
