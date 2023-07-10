@@ -4,7 +4,7 @@
       <div class="field">
         <label class="label">Message</label>
         <div class="control">
-          <textarea class="textarea" placeholder="Add a new Note" ref="newNoteRef" />
+          <textarea v-model="props.modelValue" @input="$emit('update:modelValue', $event.target.value)" class="textarea" placeholder="Add a new Note" ref="newNoteRef" />
         </div>
       </div>
 
@@ -16,3 +16,16 @@
     </div>
     </div>
 </template>
+
+<script setup>
+
+const props = defineProps({
+  modelValue: {
+    type: String,
+    required: true
+  }
+})
+
+const emit =  defineEmits(['update:modelValue'])
+
+</script>
