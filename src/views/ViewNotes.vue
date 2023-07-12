@@ -1,6 +1,6 @@
 <template>
   <div class="notes">
-    <AddEditNote v-model="newNote">
+    <AddEditNote v-model="newNote" ref="addEditNoteRef">
       <template #buttons>
         <button
           :disabled="!newNote"
@@ -25,11 +25,11 @@ import { useStoreNotes } from "@/stores/storeNotes";
 const storeNotes = useStoreNotes();
 
 const newNote = ref("");
-const newNoteRef = ref(null);
+const addEditNoteRef = ref(null);
 
 const addNote = () => {
   storeNotes.addNote(newNote.value);
   newNote.value = "";
-  newNoteRef.value.focus();
+  addEditNoteRef.value.focusTextarea();
 };
 </script>
