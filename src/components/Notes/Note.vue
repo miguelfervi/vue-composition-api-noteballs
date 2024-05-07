@@ -14,7 +14,7 @@
         </RouterLink>
         <a @click.prevent="modals.deleteNote = true" href="#" class="card-footer-item">Delete</a>
       </footer>
-      <ModalDeleteNote v-if="modals.deleteNote" v-model="modals.deleteNote" />
+      <ModalDeleteNote v-if="modals.deleteNote" v-model="modals.deleteNote" :noteId="note.id" />
     </div>
 </template>
 
