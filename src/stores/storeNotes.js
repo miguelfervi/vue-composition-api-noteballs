@@ -1,36 +1,38 @@
 import { defineStore } from "pinia";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/js/firebase";
 
 export const useStoreNotes = defineStore("storeNotes", {
   state: () => {
     return {
-      notes: [
-        {
-          id: "id1",
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores sed expedita voluptatibus assumenda facilis corrupti sint dolorum quam autem. Ad at beatae, non dolor illum unde quae pariatur debitis explicabo.",
-        },
-        {
-          id: "id2",
-          content: "This is a shorter note",
-        },
-      ],
+      notes: [],
     };
   },
   actions: {
+    async getNotes() {
+      const querySnapshot = await getDocs(collection(db, "notes"));
+      querySnapshot.forEach((doc) => {
+        let note = {
+          id: doc.id,
+          content: doc.data().content
+        }
+
+        this.notes.push(note)
+      });
+    },
     addNote(newNoteContent) {
-          let currentDate = new Date().getTime(),
-            id = currentDate.toString();
+      let currentDate = new Date().getTime(),
+        id = currentDate.toString();
 
-          let note = {
-            id,
-            content: newNoteContent,
-          };
+      let note = {
+        id,
+        content: newNoteContent,
+      };
 
-          this.notes.unshift(note)
+      this.notes.unshift(note);
     },
     deleteNote(idToDelete) {
-        this.notes = this.notes.filter((note) => note.id !== idToDelete);
-
+      this.notes = this.notes.filter((note) => note.id !== idToDelete);
     },
     updateNote(id, content) {
       let index = this.notes.findIndex((note) => {
@@ -38,16 +40,18 @@ export const useStoreNotes = defineStore("storeNotes", {
       });
 
       this.notes[index].content = content;
-    }
+    },
   },
   getters: {
     getNoteContent: (state) => {
       return (id) => {
-        return state.notes.filter(note => { return note.id === id})[0].content
-      }
+        return state.notes.filter((note) => {
+          return note.id === id;
+        })[0].content;
+      };
     },
     totalNotesCount: (state) => {
-      return state.notes.length
+      return state.notes.length;
     },
     totalCharactersCount: (state) => {
       let totalCharacters = 0;
@@ -57,6 +61,6 @@ export const useStoreNotes = defineStore("storeNotes", {
       });
 
       return totalCharacters;
-    }
-  }
+    },
+  },
 });
