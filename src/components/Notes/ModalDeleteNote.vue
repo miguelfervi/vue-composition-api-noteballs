@@ -4,7 +4,7 @@
     <div class="modal-card" ref="modalCardRef">
         <header class="modal-card-head">
         <p class="modal-card-title">Delete Note?</p>
-        <button class="delete" aria-label="close"></button>
+        <button @click="closeModal" class="delete" aria-label="close"></button>
         </header>
         <section class="modal-card-body">
         Are you sure you want to delete this note?
