@@ -11,7 +11,7 @@
         </section>
         <footer class="modal-card-foot is-justify-content-flex-end">
             <button class="button" @click="closeModal">Cancel</button>
-            <button class="button is-danger" @click="storeNotes.deleteNote(noteId)">Delete</button>
+            <button class="button is-danger" @click="deleteNote(noteId)">Delete</button>
         </footer>
     </div>
     </div>
@@ -60,5 +60,10 @@ onMounted(() => {
 onUnmounted( () => {
     document.removeEventListener('keyup', handleKeyboard)
 })
+
+const deleteNote = (noteId) => {
+    storeNotes.deleteNote(noteId)
+    closeModal()
+}
 
 </script>
