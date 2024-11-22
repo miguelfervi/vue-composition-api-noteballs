@@ -1,47 +1,54 @@
 import { defineStore } from "pinia";
-import { collection, onSnapshot, doc, setDoc } from "firebase/firestore";
+import { collection, onSnapshot, doc, deleteDoc, updateDoc, query, orderBy, addDoc } from "firebase/firestore";
 import { db } from "@/js/firebase";
 
 const notesCollectionRef = collection(db, "notes")
 
+const notesCollectionQuery = query(notesCollectionRef, orderBy("date", "desc"));
 export const useStoreNotes = defineStore("storeNotes", {
   state: () => {
     return {
       notes: [],
+      notesLoaded: false
     };
   },
   actions: {
     async getNotes() {
-      onSnapshot(notesCollectionRef, (querySnapshot) => {
+      this.notesLoaded = false
+      onSnapshot(notesCollectionQuery, (querySnapshot) => {
         let notes = []
         querySnapshot.forEach((doc) => {
           let note = {
             id: doc.id,
-            content: doc.data().content
+            content: doc.data().content,
+            date: doc.data().date
           }
   
           notes.push(note)
         });
-        this.notes = notes
+        setTimeout(() => {
+          this.notes = notes
+          this.notesLoaded = true
+        },2000)
+        
       });
     },
     async addNote(newNoteContent) {
       let currentDate = new Date().getTime(),
-        id = currentDate.toString();
+        date = currentDate.toString();
 
-      await setDoc(doc(notesCollectionRef), id), {
-        content: newNoteContent
-      };
-    },
-    deleteNote(idToDelete) {
-      this.notes = this.notes.filter((note) => note.id !== idToDelete);
-    },
-    updateNote(id, content) {
-      let index = this.notes.findIndex((note) => {
-        return note.id === id;
+      await addDoc(notesCollectionRef, {
+        content: newNoteContent,
+        date 
       });
-
-      this.notes[index].content = content;
+    },
+    async deleteNote(idToDelete) {
+        await deleteDoc(doc(notesCollectionRef, idToDelete));
+    },
+    async updateNote(id, content) {
+      await updateDoc(doc(notesCollectionRef, id), {
+        content
+      });
     },
   },
   getters: {
