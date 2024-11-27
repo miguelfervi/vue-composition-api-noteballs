@@ -4,18 +4,18 @@
   <div class="container is-max-desktop px-2 py-4">
     <RouterView />
   </div>
-  
+
 </template>
 
 <script setup>
   import NavBar from '@/components/Layout/NavBar.vue'
-  import { useStoreNotes } from '@/stores/storeNotes'
+  import { useStoreAuth } from '@/stores/storeAuth'
   import { onMounted } from 'vue';
 
-  const storeNotes = useStoreNotes()
+  const storeAuth = useStoreAuth()
 
 
-  onMounted(() => storeNotes.getNotes())
+  onMounted(() => storeAuth.init())
 
 </script>
 
