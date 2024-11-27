@@ -28,12 +28,9 @@ export const useStoreNotes = defineStore("storeNotes", {
 
           notes.push(note)
         });
-        setTimeout(() => {
           this.notes = notes
           this.notesLoaded = true
-        },2000)
-
-      });
+      }, error => console.log('error message: ', error.message));
     },
     async addNote(newNoteContent) {
       let currentDate = new Date().getTime(),
