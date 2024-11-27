@@ -1,10 +1,11 @@
 import { defineStore } from "pinia";
 import { collection, onSnapshot, doc, deleteDoc, updateDoc, query, orderBy, addDoc } from "firebase/firestore";
 import { db } from "@/js/firebase";
+import { useStoreAuth } from "./storeAuth";
 
-const notesCollectionRef = collection(db, "notes")
+let notesCollectionRef
+let notesCollectionQuery
 
-const notesCollectionQuery = query(notesCollectionRef, orderBy("date", "desc"));
 export const useStoreNotes = defineStore("storeNotes", {
   state: () => {
     return {
@@ -23,14 +24,14 @@ export const useStoreNotes = defineStore("storeNotes", {
             content: doc.data().content,
             date: doc.data().date
           }
-  
+
           notes.push(note)
         });
         setTimeout(() => {
           this.notes = notes
           this.notesLoaded = true
         },2000)
-        
+
       });
     },
     async addNote(newNoteContent) {
@@ -39,7 +40,7 @@ export const useStoreNotes = defineStore("storeNotes", {
 
       await addDoc(notesCollectionRef, {
         content: newNoteContent,
-        date 
+        date
       });
     },
     async deleteNote(idToDelete) {
@@ -50,6 +51,16 @@ export const useStoreNotes = defineStore("storeNotes", {
         content
       });
     },
+    init() {
+      const storeAuth  = useStoreAuth()
+
+      notesCollectionRef = collection(db, "users", storeAuth.user.id, 'notes'  )
+      notesCollectionQuery = query(notesCollectionRef, orderBy("date", "desc"));
+      this.getNotes()
+    },
+    clearNotes() {
+      this.notes = []
+    }
   },
   getters: {
     getNoteContent: (state) => {
